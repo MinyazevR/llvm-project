@@ -1,0 +1,342 @@
+Error while trying to load a compilation database:
+Could not auto-detect compilation database for file "test4.cc"
+No compilation database found in /home/ntyrreuir/llvm-project/clang-tools-extra/clang-tidy/if_else_clang_analyzer/build or any parent directory
+fixed-compilation-database: Error while opening fixed database: No such file or directory
+json-compilation-database: Error while opening JSON database: No such file or directory
+Running without flags.
+25............236............242............249............256............258............29............31............IfStmt 0x6210000e6b08 has_else
+|-BinaryOperator 0x6210000e6148 '_Bool' '>'
+| |-ImplicitCastExpr 0x6210000e6128 'int' <LValueToRValue>
+| | `-DeclRefExpr 0x6210000e5cc0 'int' lvalue ParmVar 0x6210000e5a78 'argc' 'int'
+| `-IntegerLiteral 0x6210000e6100 'int' 1
+|-CompoundStmt 0x6210000e6988
+| |-CallExpr 0x6210000e6330 'int'
+| | |-ImplicitCastExpr 0x6210000e6310 'int (*)(const char *__restrict, ...)' <FunctionToPointerDecay>
+| | | `-DeclRefExpr 0x6210000e6288 'int (const char *__restrict, ...)' lvalue Function 0x6210000c49d8 'printf' 'int (const char *__restrict, ...)'
+| | |-ImplicitCastExpr 0x6210000e6368 'const char *' <ArrayToPointerDecay>
+| | | `-StringLiteral 0x6210000e6240 'const char[3]' lvalue "%d"
+| | `-IntegerLiteral 0x6210000e6260 'int' 1
+| `-IfStmt 0x6210000e6958 has_else
+|   |-BinaryOperator 0x6210000e63f8 '_Bool' '>'
+|   | |-ImplicitCastExpr 0x6210000e63d8 'int' <LValueToRValue>
+|   | | `-DeclRefExpr 0x6210000e6388 'int' lvalue ParmVar 0x6210000e5a78 'argc' 'int'
+|   | `-IntegerLiteral 0x6210000e63b0 'int' 5
+|   |-CompoundStmt 0x6210000e67d8
+|   | |-CallExpr 0x6210000e6500 'int'
+|   | | |-ImplicitCastExpr 0x6210000e64e0 'int (*)(const char *__restrict, ...)' <FunctionToPointerDecay>
+|   | | | `-DeclRefExpr 0x6210000e64b8 'int (const char *__restrict, ...)' lvalue Function 0x6210000c49d8 'printf' 'int (const char *__restrict, ...)'
+|   | | |-ImplicitCastExpr 0x6210000e6538 'const char *' <ArrayToPointerDecay>
+|   | | | `-StringLiteral 0x6210000e6470 'const char[3]' lvalue "%d"
+|   | | `-IntegerLiteral 0x6210000e6490 'int' 5
+|   | `-IfStmt 0x6210000e67b0
+|   |   |-BinaryOperator 0x6210000e65c8 '_Bool' '>'
+|   |   | |-ImplicitCastExpr 0x6210000e65a8 'int' <LValueToRValue>
+|   |   | | `-DeclRefExpr 0x6210000e6558 'int' lvalue ParmVar 0x6210000e5a78 'argc' 'int'
+|   |   | `-IntegerLiteral 0x6210000e6580 'int' 10
+|   |   `-CompoundStmt 0x6210000e6788
+|   |     |-CallExpr 0x6210000e66d0 'int'
+|   |     | |-ImplicitCastExpr 0x6210000e66b0 'int (*)(const char *__restrict, ...)' <FunctionToPointerDecay>
+|   |     | | `-DeclRefExpr 0x6210000e6688 'int (const char *__restrict, ...)' lvalue Function 0x6210000c49d8 'printf' 'int (const char *__restrict, ...)'
+|   |     | |-ImplicitCastExpr 0x6210000e6708 'const char *' <ArrayToPointerDecay>
+|   |     | | `-StringLiteral 0x6210000e6640 'const char[3]' lvalue "%d"
+|   |     | `-IntegerLiteral 0x6210000e6660 'int' 10
+|   |     `-ReturnStmt 0x6210000e6770
+|   |       `-UnaryOperator 0x6210000e6750 'int' prefix '-'
+|   |         `-IntegerLiteral 0x6210000e6728 'int' 1
+|   `-CompoundStmt 0x6210000e6938
+|     `-CallExpr 0x6210000e68e0 'int'
+|       |-ImplicitCastExpr 0x6210000e68c0 'int (*)(const char *__restrict, ...)' <FunctionToPointerDecay>
+|       | `-DeclRefExpr 0x6210000e6898 'int (const char *__restrict, ...)' lvalue Function 0x6210000c49d8 'printf' 'int (const char *__restrict, ...)'
+|       |-ImplicitCastExpr 0x6210000e6918 'const char *' <ArrayToPointerDecay>
+|       | `-StringLiteral 0x6210000e6850 'const char[3]' lvalue "%d"
+|       `-IntegerLiteral 0x6210000e6870 'int' 6
+`-CompoundStmt 0x6210000e6ae8
+  `-CallExpr 0x6210000e6a90 'int'
+    |-ImplicitCastExpr 0x6210000e6a70 'int (*)(const char *__restrict, ...)' <FunctionToPointerDecay>
+    | `-DeclRefExpr 0x6210000e6a48 'int (const char *__restrict, ...)' lvalue Function 0x6210000c49d8 'printf' 'int (const char *__restrict, ...)'
+    |-ImplicitCastExpr 0x6210000e6ac8 'const char *' <ArrayToPointerDecay>
+    | `-StringLiteral 0x6210000e6a00 'const char[3]' lvalue "%d"
+    `-IntegerLiteral 0x6210000e6a20 'int' 6
+31............
+ [B7]
+   1: argc > 1
+   T: if [B7.1]
+   Preds (1): B8
+   Succs (2): B6 B2
+
+39............
+ [B7]
+   1: argc > 1
+   T: if [B7.1]
+   Preds (1): B8
+   Succs (2): B6 B2
+
+
+ [B7]
+   1: argc > 1
+   T: if [B7.1]
+   Preds (1): B8
+   Succs (2): B6 B2
+
+44............NNNNNNNNNNNNNNNNNNNNNNNNNN
+ [B1]
+   1: 228
+   2: return [B1.1];
+   Preds (3): B2 B3 B5
+   Succs (1): B0
+
+BBBBBBBBBBBBBBBBBBBBBBBBBBBBBJJJJJJJJJJJJJJJJJJJJJJJJJJ
+ [B1]
+   1: 228
+   2: return [B1.1];
+   Preds (3): B2 B3 B5
+   Succs (1): B0
+
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+------------------------------------------------{
+    printf("%d", 6);
+}
+block 
+
+ [B1]
+   1: 228
+   2: return [B1.1];
+   Preds (3): B2 B3 B5
+   Succs (1): B0
+
+frontierBlock 
+
+ [B2]
+   1: printf("%d", 6)
+   Preds (1): B7
+   Succs (1): B1
+
+getIterruptStatement 
+ReturnStmt 0x6210000e6b60
+`-IntegerLiteral 0x6210000e6b38 'int' 228
+succ_size == 1 
+
+ [B2]
+   1: return [B1.1];
+   2: printf("%d", 6)
+   Preds (1): B7
+   Succs (1): B1
+
+{
+    printf("%d", 6);
+}
+frontierBlock 
+
+ [B3]
+   1: printf("%d", 6)
+   Preds (1): B6
+   Succs (1): B1
+
+getIterruptStatement 
+ReturnStmt 0x6210000e6b60
+`-IntegerLiteral 0x6210000e6b38 'int' 228
+succ_size == 1 
+
+ [B3]
+   1: return [B1.1];
+   2: printf("%d", 6)
+   Preds (1): B6
+   Succs (1): B1
+
+{
+    printf("%d", 6);
+}
+frontierBlock 
+
+ [B5]
+   1: printf("%d", 5)
+   2: argc > 10
+   T: if [B5.2]
+   Preds (1): B6
+   Succs (2): B4 B1
+
+getIterruptStatement 
+ReturnStmt 0x6210000e6b60
+`-IntegerLiteral 0x6210000e6b38 'int' 228
+25............236............242............249............256............258............29............31............IfStmt 0x6210000e6958 has_else
+|-BinaryOperator 0x6210000e63f8 '_Bool' '>'
+| |-ImplicitCastExpr 0x6210000e63d8 'int' <LValueToRValue>
+| | `-DeclRefExpr 0x6210000e6388 'int' lvalue ParmVar 0x6210000e5a78 'argc' 'int'
+| `-IntegerLiteral 0x6210000e63b0 'int' 5
+|-CompoundStmt 0x6210000e67d8
+| |-CallExpr 0x6210000e6500 'int'
+| | |-ImplicitCastExpr 0x6210000e64e0 'int (*)(const char *__restrict, ...)' <FunctionToPointerDecay>
+| | | `-DeclRefExpr 0x6210000e64b8 'int (const char *__restrict, ...)' lvalue Function 0x6210000c49d8 'printf' 'int (const char *__restrict, ...)'
+| | |-ImplicitCastExpr 0x6210000e6538 'const char *' <ArrayToPointerDecay>
+| | | `-StringLiteral 0x6210000e6470 'const char[3]' lvalue "%d"
+| | `-IntegerLiteral 0x6210000e6490 'int' 5
+| `-IfStmt 0x6210000e67b0
+|   |-BinaryOperator 0x6210000e65c8 '_Bool' '>'
+|   | |-ImplicitCastExpr 0x6210000e65a8 'int' <LValueToRValue>
+|   | | `-DeclRefExpr 0x6210000e6558 'int' lvalue ParmVar 0x6210000e5a78 'argc' 'int'
+|   | `-IntegerLiteral 0x6210000e6580 'int' 10
+|   `-CompoundStmt 0x6210000e6788
+|     |-CallExpr 0x6210000e66d0 'int'
+|     | |-ImplicitCastExpr 0x6210000e66b0 'int (*)(const char *__restrict, ...)' <FunctionToPointerDecay>
+|     | | `-DeclRefExpr 0x6210000e6688 'int (const char *__restrict, ...)' lvalue Function 0x6210000c49d8 'printf' 'int (const char *__restrict, ...)'
+|     | |-ImplicitCastExpr 0x6210000e6708 'const char *' <ArrayToPointerDecay>
+|     | | `-StringLiteral 0x6210000e6640 'const char[3]' lvalue "%d"
+|     | `-IntegerLiteral 0x6210000e6660 'int' 10
+|     `-ReturnStmt 0x6210000e6770
+|       `-UnaryOperator 0x6210000e6750 'int' prefix '-'
+|         `-IntegerLiteral 0x6210000e6728 'int' 1
+`-CompoundStmt 0x6210000e6938
+  `-CallExpr 0x6210000e68e0 'int'
+    |-ImplicitCastExpr 0x6210000e68c0 'int (*)(const char *__restrict, ...)' <FunctionToPointerDecay>
+    | `-DeclRefExpr 0x6210000e6898 'int (const char *__restrict, ...)' lvalue Function 0x6210000c49d8 'printf' 'int (const char *__restrict, ...)'
+    |-ImplicitCastExpr 0x6210000e6918 'const char *' <ArrayToPointerDecay>
+    | `-StringLiteral 0x6210000e6850 'const char[3]' lvalue "%d"
+    `-IntegerLiteral 0x6210000e6870 'int' 6
+31............
+ [B6]
+   1: printf("%d", 1)
+   2: argc > 5
+   T: if [B6.2]
+   Preds (1): B7
+   Succs (2): B5 B3
+
+39............
+ [B6]
+   1: printf("%d", 1)
+   2: argc > 5
+   T: if [B6.2]
+   Preds (1): B7
+   Succs (2): B5 B3
+
+
+ [B6]
+   1: printf("%d", 1)
+   2: argc > 5
+   T: if [B6.2]
+   Preds (1): B7
+   Succs (2): B5 B3
+
+44............NNNNNNNNNNNNNNNNNNNNNNNNNN
+ [B1]
+   1: 228
+   2: return [B1.1];
+   Preds (3): B2 B3 B5
+   Succs (1): B0
+
+BBBBBBBBBBBBBBBBBBBBBBBBBBBBBJJJJJJJJJJJJJJJJJJJJJJJJJJ
+ [B1]
+   1: 228
+   2: return [B1.1];
+   Preds (3): B2 B3 B5
+   Succs (1): B0
+
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+------------------------------------------------{
+    printf("%d", 6);
+}
+block 
+
+ [B1]
+   1: 228
+   2: return [B1.1];
+   Preds (3): B2 B3 B5
+   Succs (1): B0
+
+frontierBlock 
+
+ [B2]
+   1: printf("%d", 6)
+   Preds (1): B7
+   Succs (1): B1
+
+getIterruptStatement 
+ReturnStmt 0x6210000e6b60
+`-IntegerLiteral 0x6210000e6b38 'int' 228
+succ_size == 1 
+
+ [B2]
+   1: return [B1.1];
+   2: printf("%d", 6)
+   Preds (1): B7
+   Succs (1): B1
+
+{
+    printf("%d", 6);
+}
+frontierBlock 
+
+ [B3]
+   1: printf("%d", 6)
+   Preds (1): B6
+   Succs (1): B1
+
+getIterruptStatement 
+ReturnStmt 0x6210000e6b60
+`-IntegerLiteral 0x6210000e6b38 'int' 228
+succ_size == 1 
+
+ [B3]
+   1: return [B1.1];
+   2: printf("%d", 6)
+   Preds (1): B6
+   Succs (1): B1
+
+{
+    printf("%d", 6);
+}
+frontierBlock 
+
+ [B5]
+   1: printf("%d", 5)
+   2: argc > 10
+   T: if [B5.2]
+   Preds (1): B6
+   Succs (2): B4 B1
+
+getIterruptStatement 
+ReturnStmt 0x6210000e6b60
+`-IntegerLiteral 0x6210000e6b38 'int' 228
+Start matching
+
+=================================================================
+==3051010==ERROR: LeakSanitizer: detected memory leaks
+
+Direct leak of 32 byte(s) in 2 object(s) allocated from:
+    #0 0x7f2ec98c0498 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:95
+    #1 0x5618814f1618 in clang::CFGStmtMap::Build(clang::CFG*, clang::ParentMap*) (/home/ntyrreuir/llvm-project/clang-tools-extra/clang-tidy/if_else_clang_analyzer/build/test+0x13cf618)
+
+Indirect leak of 4096 byte(s) in 2 object(s) allocated from:
+    #0 0x7f2ec98c0498 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:95
+    #1 0x5618817d9997 in llvm::DenseMap<clang::Stmt*, clang::Stmt*, llvm::DenseMapInfo<clang::Stmt*, void>, llvm::detail::DenseMapPair<clang::Stmt*, clang::Stmt*> >::grow(unsigned int) (/home/ntyrreuir/llvm-project/clang-tools-extra/clang-tidy/if_else_clang_analyzer/build/test+0x16b7997)
+
+Indirect leak of 2048 byte(s) in 2 object(s) allocated from:
+    #0 0x7f2ec98c0498 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:95
+    #1 0x5618814f1a07 in llvm::DenseMap<clang::Stmt const*, clang::CFGBlock*, llvm::DenseMapInfo<clang::Stmt const*, void>, llvm::detail::DenseMapPair<clang::Stmt const*, clang::CFGBlock*> >::grow(unsigned int) (/home/ntyrreuir/llvm-project/clang-tools-extra/clang-tidy/if_else_clang_analyzer/build/test+0x13cfa07)
+    #2 0x5618806a3e18 in IfElseReturnChecker::run(clang::ast_matchers::MatchFinder::MatchResult const&) (/home/ntyrreuir/llvm-project/clang-tools-extra/clang-tidy/if_else_clang_analyzer/build/test+0x581e18)
+    #3 0x5618819f0e1b in clang::ast_matchers::internal::(anonymous namespace)::MatchASTVisitor::MatchVisitor::visitMatch(clang::ast_matchers::BoundNodes const&) (/home/ntyrreuir/llvm-project/clang-tools-extra/clang-tidy/if_else_clang_analyzer/build/test+0x18cee1b)
+    #4 0x7fff9acd600d  ([stack]+0x1e00d)
+
+Indirect leak of 48 byte(s) in 2 object(s) allocated from:
+    #0 0x7f2ec98c0498 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:95
+    #1 0x5618817d8670 in clang::ParentMap::ParentMap(clang::Stmt*) (/home/ntyrreuir/llvm-project/clang-tools-extra/clang-tidy/if_else_clang_analyzer/build/test+0x16b6670)
+    #2 0x5618806a3e18 in IfElseReturnChecker::run(clang::ast_matchers::MatchFinder::MatchResult const&) (/home/ntyrreuir/llvm-project/clang-tools-extra/clang-tidy/if_else_clang_analyzer/build/test+0x581e18)
+    #3 0x5618819f0e1b in clang::ast_matchers::internal::(anonymous namespace)::MatchASTVisitor::MatchVisitor::visitMatch(clang::ast_matchers::BoundNodes const&) (/home/ntyrreuir/llvm-project/clang-tools-extra/clang-tidy/if_else_clang_analyzer/build/test+0x18cee1b)
+    #4 0x7fff9acd600d  ([stack]+0x1e00d)
+
+Indirect leak of 48 byte(s) in 2 object(s) allocated from:
+    #0 0x7f2ec98c0498 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:95
+    #1 0x5618814f15e8 in clang::CFGStmtMap::Build(clang::CFG*, clang::ParentMap*) (/home/ntyrreuir/llvm-project/clang-tools-extra/clang-tidy/if_else_clang_analyzer/build/test+0x13cf5e8)
+    #2 0x5618806a3e18 in IfElseReturnChecker::run(clang::ast_matchers::MatchFinder::MatchResult const&) (/home/ntyrreuir/llvm-project/clang-tools-extra/clang-tidy/if_else_clang_analyzer/build/test+0x581e18)
+    #3 0x5618819f0e1b in clang::ast_matchers::internal::(anonymous namespace)::MatchASTVisitor::MatchVisitor::visitMatch(clang::ast_matchers::BoundNodes const&) (/home/ntyrreuir/llvm-project/clang-tools-extra/clang-tidy/if_else_clang_analyzer/build/test+0x18cee1b)
+    #4 0x7fff9acd600d  ([stack]+0x1e00d)
+
+Indirect leak of 16 byte(s) in 2 object(s) allocated from:
+    #0 0x7f2ec98c0498 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:95
+    #1 0x5618806a4bf4 in IfElseReturnChecker::initialize1(clang::ast_matchers::MatchFinder::MatchResult const&) (/home/ntyrreuir/llvm-project/clang-tools-extra/clang-tidy/if_else_clang_analyzer/build/test+0x582bf4)
+    #2 0x5618806a3e18 in IfElseReturnChecker::run(clang::ast_matchers::MatchFinder::MatchResult const&) (/home/ntyrreuir/llvm-project/clang-tools-extra/clang-tidy/if_else_clang_analyzer/build/test+0x581e18)
+    #3 0x5618819f0e1b in clang::ast_matchers::internal::(anonymous namespace)::MatchASTVisitor::MatchVisitor::visitMatch(clang::ast_matchers::BoundNodes const&) (/home/ntyrreuir/llvm-project/clang-tools-extra/clang-tidy/if_else_clang_analyzer/build/test+0x18cee1b)
+    #4 0x7fff9acd600d  ([stack]+0x1e00d)
+
+SUMMARY: AddressSanitizer: 6288 byte(s) leaked in 12 allocation(s).

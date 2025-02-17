@@ -136,6 +136,10 @@ static int LLVM_ATTRIBUTE_UNUSED ReadabilityModuleAnchorDestination =
 extern volatile int ZirconModuleAnchorSource;
 static int LLVM_ATTRIBUTE_UNUSED ZirconModuleAnchorDestination =
     ZirconModuleAnchorSource;
+    
+extern volatile int testModuleAnchorSource;
+static int LLVM_ATTRIBUTE_UNUSED testModuleAnchorDestination =
+    testModuleAnchorSource;
 
 } // namespace clang::tidy
 
