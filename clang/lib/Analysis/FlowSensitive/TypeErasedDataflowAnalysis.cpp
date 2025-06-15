@@ -312,9 +312,13 @@ computeBlockInputState(const CFGBlock &Block, AnalysisContext &AC) {
       // assert ourselves instead of asserting via `cast()` so that we get
       // a more meaningful line number if the assertion fails.
       assert(CondVal != nullptr);
-      BoolValue *AssertedVal =
+      if (CondVal) {
+        BoolValue *AssertedVal =
           BranchVal ? CondVal : &Copy.Env.makeNot(*CondVal);
-      Copy.Env.assume(AssertedVal->formula());
+        if (AssertedVal) {
+          Copy.Env.assume(AssertedVal->formula());
+        }
+      }
     }
     AC.Analysis.transferBranchTypeErased(BranchVal, Cond, Copy.Lattice,
                                          Copy.Env);
@@ -578,7 +582,119 @@ runTypeErasedDataflowAnalysis(
       transferCFGBlock(*Block, AC, PostAnalysisCallbacks);
     }
   }
+  return std::move(BlockStates);
+}
 
+llvm::Expected<std::vector<std::optional<TypeErasedDataflowAnalysisState>>>
+runBlockTypeErasedDataflowAnalysis(
+    const AdornedCFG &ACFG, TypeErasedDataflowAnalysis &Analysis,
+    const Environment &InitEnv,
+    const CFGBlock *EntryBlock,
+    const CFGEltCallbacksTypeErased &PostAnalysisCallbacks,
+    const CFGBlockCheckCallback &BlockAnalysisCheckCallbacks,
+    const CFGBlockCheckCallback &NeedTraverse,
+    std::int32_t MaxBlockVisits) {
+  PrettyStackTraceAnalysis CrashInfo(ACFG, "runTypeErasedDataflowAnalysis");
+
+  std::optional<Environment> MaybeStartingEnv;
+  if (InitEnv.callStackSize() == 0) {
+    MaybeStartingEnv = InitEnv.fork();
+    MaybeStartingEnv->initialize();
+  }
+  const Environment &StartingEnv =
+      MaybeStartingEnv ? *MaybeStartingEnv : InitEnv;
+
+  const clang::CFG &CFG = ACFG.getCFG();
+  PostOrderCFGView POV(&CFG);
+  ForwardDataflowWorklist Worklist(CFG, &POV);
+
+  std::vector<std::optional<TypeErasedDataflowAnalysisState>> BlockStates(
+      CFG.size());
+
+  const CFGBlock &Entry = EntryBlock ? *EntryBlock: CFG.getEntry();
+  BlockStates[Entry.getBlockID()] = {Analysis.typeErasedInitialElement(),
+                                     StartingEnv.fork()};
+  Worklist.enqueueBlock(&Entry);
+
+  AnalysisContext AC(ACFG, Analysis, StartingEnv, BlockStates);
+  std::int32_t BlockVisits = 0;
+  while (const CFGBlock *Block = Worklist.dequeue()) {
+    LLVM_DEBUG(llvm::dbgs()
+               << "Processing Block " << Block->getBlockID() << "\n");
+    if (++BlockVisits > MaxBlockVisits) {
+      return llvm::createStringError(std::errc::timed_out,
+                                     "maximum number of blocks processed");
+    }
+
+    const std::optional<TypeErasedDataflowAnalysisState> &OldBlockState =
+        BlockStates[Block->getBlockID()];
+
+    TypeErasedDataflowAnalysisState NewBlockState =
+        transferCFGBlock(*Block, AC);
+
+    if (!NeedTraverse(*Block, NewBlockState)) {
+      BlockStates[Block->getBlockID()] = std::move(NewBlockState);
+      continue;
+    }
+
+    if (!BlockAnalysisCheckCallbacks(*Block, NewBlockState)) {
+      return llvm::createStringError(std::errc::timed_out,
+                                     "!callback");
+    }
+
+    LLVM_DEBUG({
+      llvm::errs() << "New Env:\n";
+      NewBlockState.Env.dump();
+    });
+
+    if (OldBlockState && Entry.getBlockID() != Block->getBlockID()) {
+      LLVM_DEBUG({
+        llvm::errs() << "Old Env:\n";
+        OldBlockState->Env.dump();
+      });
+      if (isBackedgeNode(*Block)) {
+        LatticeJoinEffect Effect1 = Analysis.widenTypeErased(
+            NewBlockState.Lattice, OldBlockState->Lattice);
+        LatticeJoinEffect Effect2 =
+            NewBlockState.Env.widen(OldBlockState->Env, Analysis);
+        if (Effect1 == LatticeJoinEffect::Unchanged &&
+            Effect2 == LatticeJoinEffect::Unchanged) {
+          // The state of `Block` didn't change from widening so there's no need
+          // to revisit its successors.
+          llvm::errs() << "no need revisit its successors\n";
+          AC.Log.blockConverged();
+          continue;
+        }
+      } else if (Analysis.isEqualTypeErased(OldBlockState->Lattice,
+                                            NewBlockState.Lattice) &&
+                 OldBlockState->Env.equivalentTo(NewBlockState.Env, Analysis)) {
+        // The state of `Block` didn't change after transfer so there's no need
+        // to revisit its successors.
+        AC.Log.blockConverged();
+        continue;
+      }
+    }
+
+    BlockStates[Block->getBlockID()] = std::move(NewBlockState);
+
+    // Do not add unreachable successor blocks to `Worklist`.
+    if (Block->hasNoReturnElement()) {
+      continue;
+    }
+
+    Worklist.enqueueSuccessors(Block);
+  }
+  // FIXME: Consider evaluating unreachable basic blocks (those that have a
+  // state set to `std::nullopt` at this point) to also analyze dead code.
+
+  if (PostAnalysisCallbacks.Before || PostAnalysisCallbacks.After) {
+    for (const CFGBlock *Block : ACFG.getCFG()) {
+      // Skip blocks that were not evaluated.
+      if (!BlockStates[Block->getBlockID()])
+        continue;
+      transferCFGBlock(*Block, AC, PostAnalysisCallbacks);
+    }
+  }
   return std::move(BlockStates);
 }
 

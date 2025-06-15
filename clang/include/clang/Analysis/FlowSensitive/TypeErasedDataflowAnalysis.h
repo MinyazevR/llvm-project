@@ -137,6 +137,9 @@ struct TypeErasedDataflowAnalysisState {
 using CFGEltCallbackTypeErased = std::function<void(
     const CFGElement &, const TypeErasedDataflowAnalysisState &)>;
 
+using CFGBlockCheckCallback = std::function<bool(
+    const CFGBlock &, const TypeErasedDataflowAnalysisState &)>;
+
 /// A pair of callbacks to be called with the state before and after visiting a
 /// CFG element.
 /// Either or both of the callbacks may be null.
@@ -164,6 +167,15 @@ runTypeErasedDataflowAnalysis(
     const CFGEltCallbacksTypeErased &PostAnalysisCallbacks,
     std::int32_t MaxBlockVisits);
 
+llvm::Expected<std::vector<std::optional<TypeErasedDataflowAnalysisState>>>
+runBlockTypeErasedDataflowAnalysis(
+    const AdornedCFG &ACFG, TypeErasedDataflowAnalysis &Analysis,
+    const Environment &InitEnv,
+    const clang::CFGBlock *EntryBlock,
+    const CFGEltCallbacksTypeErased &PostAnalysisCallbacks,
+    const CFGBlockCheckCallback &BlockAnalysisCheckCallbacks,
+    const CFGBlockCheckCallback &NeedTraverse,
+    std::int32_t MaxBlockVisits);
 } // namespace dataflow
 } // namespace clang
 
