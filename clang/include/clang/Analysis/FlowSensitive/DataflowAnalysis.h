@@ -286,6 +286,67 @@ runDataflowAnalysis(const AdornedCFG &ACFG, AnalysisT &Analysis,
   return std::move(BlockStates);
 }
 
+template <typename AnalysisT>
+llvm::Expected<std::vector<
+    std::optional<DataflowAnalysisState<typename AnalysisT::Lattice>>>>
+runBlockDataflowAnalysis(const AdornedCFG &ACFG, AnalysisT &Analysis,
+                    const Environment &InitEnv,
+                    const clang::CFGBlock *EntryBlock,
+                    const CFGBlockCheckCallback &BlockAnalysisCheckCallbacks,
+                    const CFGBlockCheckCallback &NeedTraverse,
+                    CFGEltCallbacks<AnalysisT> PostAnalysisCallbacks = {},
+                    std::int32_t MaxBlockVisits = kDefaultMaxBlockVisits) {
+  CFGEltCallbacksTypeErased TypeErasedCallbacks;
+  if (PostAnalysisCallbacks.Before) {
+    TypeErasedCallbacks.Before =
+        [&PostAnalysisCallbacks](const CFGElement &Element,
+                                 const TypeErasedDataflowAnalysisState &State) {
+          auto *Lattice =
+              llvm::any_cast<typename AnalysisT::Lattice>(&State.Lattice.Value);
+          // FIXME: we should not be copying the environment here!
+          // Ultimately the `CFGEltCallback` only gets a const reference anyway.
+          PostAnalysisCallbacks.Before(
+              Element, DataflowAnalysisState<typename AnalysisT::Lattice>{
+                           *Lattice, State.Env.fork()});
+        };
+  }
+  if (PostAnalysisCallbacks.After) {
+    TypeErasedCallbacks.After =
+        [&PostAnalysisCallbacks](const CFGElement &Element,
+                                 const TypeErasedDataflowAnalysisState &State) {
+          auto *Lattice =
+              llvm::any_cast<typename AnalysisT::Lattice>(&State.Lattice.Value);
+          // FIXME: we should not be copying the environment here!
+          // Ultimately the `CFGEltCallback` only gets a const reference anyway.
+          PostAnalysisCallbacks.After(
+              Element, DataflowAnalysisState<typename AnalysisT::Lattice>{
+                           *Lattice, State.Env.fork()});
+        };
+  }
+
+  auto TypeErasedBlockStates = runBlockTypeErasedDataflowAnalysis(
+      ACFG, Analysis, InitEnv, EntryBlock, TypeErasedCallbacks, BlockAnalysisCheckCallbacks, NeedTraverse, MaxBlockVisits);
+  if (!TypeErasedBlockStates)
+    return TypeErasedBlockStates.takeError();
+
+  std::vector<std::optional<DataflowAnalysisState<typename AnalysisT::Lattice>>>
+      BlockStates;
+  BlockStates.reserve(TypeErasedBlockStates->size());
+
+  llvm::transform(
+      std::move(*TypeErasedBlockStates), std::back_inserter(BlockStates),
+      [](auto &OptState) {
+        return llvm::transformOptional(
+            std::move(OptState), [](TypeErasedDataflowAnalysisState &&State) {
+              return DataflowAnalysisState<typename AnalysisT::Lattice>{
+                  llvm::any_cast<typename AnalysisT::Lattice>(
+                      std::move(State.Lattice.Value)),
+                  std::move(State.Env)};
+            });
+      });
+  return std::move(BlockStates);
+}
+
 // Create an analysis class that is derived from `DataflowAnalysis`. This is an
 // SFINAE adapter that allows us to call two different variants of constructor
 // (either with or without the optional `Environment` parameter).
